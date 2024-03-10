@@ -2,3 +2,12 @@
 
 # S3928: Parameter names used into ArgumentException constructors should match an existing one 
 dotnet_diagnostic.S3928.severity = none
+
+# CS8604: Possible null reference argument.
+dotnet_diagnostic.CS8604.severity = none
+
+# S3626: Jump statements should not be redundant
+dotnet_diagnostic.S3626.severity = none
+
+# VSTHRD200: Use "Async" suffix for async methods
+dotnet_diagnostic.VSTHRD200.severity = none

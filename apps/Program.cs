@@ -1,6 +1,8 @@
 
 using apps.Configs;
+using apps.Helper;
 using apps.Models.Contexts;
+using apps.Services;
 using Microsoft.EntityFrameworkCore;
 using VaultSharp.Extensions.Configuration;
 
@@ -28,6 +30,13 @@ if(appConfig.PostgreSqlConnectionString is null)
 builder.Services.AddDbContext<DataDbContext>(options => {
     options.UseNpgsql(appConfig.PostgreSqlConnectionString!);
 });
+
+//Setup DI Service
+builder.Services.AddSingleton<IEngineService, EngineService>();
+builder.Services.AddScoped<EngineSetupWorkflow>();
+
+//Setup Background Service
+builder.Services.AddHostedService<EngineSetupWorkflowHelper>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

@@ -1,4 +1,5 @@
 ﻿
+using apps.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace apps.Models.Contexts
@@ -9,5 +10,16 @@ namespace apps.Models.Contexts
         {
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
+
+        public DbSet<EngineWorkflow>? EngineWorkflow { get; set; }
+        public DbSet<EngineWorkflowExpression>? EngineWorkflowExpression { get; set; }
+        public DbSet<EngineRule>? EngineRule { get; set; }
+        public DbSet<EngineRuleApps>? EngineRuleApps { get; set; }
+        public DbSet<EngineRuleExpression>? EngineRuleExpression { get; set; }
+        public DbSet<EngineRuleMembership>? EngineRuleMembership { get; set; }
+        public DbSet<EngineRuleMop>? EngineRuleMop { get; set; }
+        public DbSet<EngineRuleResult>? EngineRuleResult { get; set; }
+        public DbSet<EngineRuleSite>? EngineRuleSite { get; set; }
+        public DbSet<EngineRuleVariable>? EngineRuleVariable { get; set; }
     }
 }
