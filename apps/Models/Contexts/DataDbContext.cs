@@ -11,6 +11,7 @@ namespace apps.Models.Contexts
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
 
+        //Db Engine Setup
         public DbSet<EngineWorkflow>? EngineWorkflow { get; set; }
         public DbSet<EngineWorkflowExpression>? EngineWorkflowExpression { get; set; }
         public DbSet<EngineRule>? EngineRule { get; set; }
@@ -21,5 +22,8 @@ namespace apps.Models.Contexts
         public DbSet<EngineRuleResult>? EngineRuleResult { get; set; }
         public DbSet<EngineRuleSite>? EngineRuleSite { get; set; }
         public DbSet<EngineRuleVariable>? EngineRuleVariable { get; set; }
+
+        //Db Engine Transaction
+        public DbSet<TransOtp> TransOtp { get; set; }
     }
 }

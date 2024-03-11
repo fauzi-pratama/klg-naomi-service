@@ -1,17 +1,17 @@
 ﻿
-using System.Text;
 using RulesEngine.Models;
 using RulesEngine.Actions;
 using apps.Configs;
-using apps.Models.Entities;
-using Microsoft.EntityFrameworkCore;
+using apps.Models.Response;
+using Newtonsoft.Json;
+using apps.Models.Request;
 
 namespace apps.Services
 {
     public interface IEngineService
     {
         bool SetupEngine(Workflow[] dataWorkflow);
-        Task<List<RuleResultTree>> GetPromo(string workflowPromo, object findDataPromo, bool getDetail = false);
+        Task<(List<EngineResponse> data, bool status, string message)> GetPromo(EngineRequest engineRequest, bool getDetail = false);
     }
 
     public class EngineService() : IEngineService
@@ -22,7 +22,7 @@ namespace apps.Services
         {
             var reSettings = new ReSettings
             {
-                CustomActions = 
+                CustomActions =
                     new Dictionary<string, Func<ActionBase>>
                     {
                         {"ResultPromo", () => new EngineResult()}
@@ -34,17 +34,35 @@ namespace apps.Services
             return true;
         }
 
-        public async Task<List<RuleResultTree>> GetPromo(string workflowPromo, object findDataPromo, bool getDetail = false)
+        public async Task<(List<EngineResponse> data, bool status, string message)> GetPromo(EngineRequest engineRequest, bool getDetail = false)
         {
-            RuleParameter paramsPromo = new("paramsPromo", findDataPromo);
+            List<EngineResponse> listPromoResult = [];
 
-            List<RuleResultTree> resultList = 
-                await _rulesEngine!.ExecuteAllRulesAsync(workflowPromo, paramsPromo);
+            try
+            {
+                RuleParameter paramsPromo = new("paramsPromo", engineRequest);
 
-            if (!getDetail)
-                resultList = resultList.Where(q => q.IsSuccess).ToList();
+                List<RuleResultTree> resultList =
+                    await _rulesEngine!.ExecuteAllRulesAsync(engineRequest.CompanyCode, paramsPromo);
 
-            return resultList;
+                if (!getDetail)
+                    resultList = resultList.Where(q => q.IsSuccess).ToList();
+
+                Parallel.ForEach(resultList, loopPromoResult =>
+                {
+                    var dataResultDetailString = JsonConvert.SerializeObject(loopPromoResult.ActionResult.Output);
+                    var dataResultDetail = JsonConvert.DeserializeObject<EngineResponse>(dataResultDetailString);
+
+                    if (dataResultDetail?.PromoCode != null)
+                        listPromoResult.Add(dataResultDetail);
+                });
+
+                return (listPromoResult, true, "Success");
+            }
+            catch (Exception ex)
+            {
+                return (listPromoResult, false, $"Failed get promo from engine : {ex.Message}");
+            }
         }
     }
 }

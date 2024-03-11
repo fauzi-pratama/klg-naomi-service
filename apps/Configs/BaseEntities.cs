@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace apps.Models.Entities
+namespace apps.Configs
 {
     public class BaseEntities
     {
