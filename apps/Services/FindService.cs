@@ -1,39 +1,33 @@
 ﻿
+using AutoMapper;
 using apps.Models.Contexts;
 using apps.Models.Request;
 using apps.Models.Response;
-using AutoMapper;
-using Newtonsoft.Json;
-using RulesEngine.Models;
-using System.Globalization;
 
 namespace apps.Services
 {
     public interface IFindService
     {
-        
+        Task<(List<FindPromoResponse> data, bool status, string message)> FindPromo(FindPromoRequest dataRequest);
     }
 
-    public class FindService(DataDbContext dataDbContext, EngineService engineService, Mapper mapper) : IFindService
+    public class FindService(DataDbContext dataDbContext, IEngineService engineService, IMapper mapper, IOtpService otpService,
+        ITransService transService) : IFindService
     {
-        public async Task<(List<FindPromoResponse>, string, bool)> FindPromo(FindPromoRequest dataRequest)
+        public async Task<(List<FindPromoResponse> data, bool status, string message)> FindPromo(FindPromoRequest dataRequest)
         {
             //Convert to EngineRequest with Mapper
-            bool rollbackStatus = false;
+            List<FindPromoResponse> dataResponse = [];
             EngineRequest engineRequest = mapper.Map<EngineRequest>(dataRequest);
 
-            #region Cek Otp Entertain
+            //Cek Validasi Otp Entertain
+            if (!string.IsNullOrWhiteSpace(engineRequest.EntertainNip) && await otpService.ConfirmOtp(engineRequest))
+                return (dataResponse, false, "Otp is not valid !!");
 
-            //if (!string.IsNullOrWhiteSpace(engineRequest.EntertainNip))
-            //{
-            //    (bool cekConfirmOtp, string? messageConfirmOtp) =
-            //        await _otpPromo.ConfirmOtp(engineRequest.CompanyCode, engineRequest.EntertainNip, engineRequest.EntertainOtp);
-
-            //    if (!cekConfirmOtp)
-            //        return (new List<FindPromoResponse>(), messageConfirmOtp, false);
-            //}
-
-            #endregion
+            //Cek Transaction Already Exist
+            var resultCekTransactionExist = await transService.CekTransactionExist(engineRequest);
+            if(!resultCekTransactionExist.status)
+                return (dataResponse, resultCekTransactionExist.status, resultCekTransactionExist.message);
 
             #region Cek Transaction Already Exist
 
@@ -115,23 +109,13 @@ namespace apps.Services
 
             var resultCallEngine = await engineService.GetPromo(engineRequest);
 
-            //Validate Error
+            //Validate Error Call Engine
             if (!resultCallEngine.status)
-            {
-                if (rollbackStatus)
-                    await dataDbContext.Database.RollbackTransactionAsync();
+                return (dataResponse, resultCallEngine.status, $"Failed get promo from engine, {resultCallEngine.message}");
 
-                return (new List<FindPromoResponse>(), $"Failed get promo from engine, {resultCallEngine.message}", false);
-            }
-
-            //Validate Null Result Engine
+            //Validate Null on Result Engine
             if (resultCallEngine.data is null)
-            {
-                if (rollbackStatus)
-                    await dataDbContext.Database.RollbackTransactionAsync();
-
-                return (new List<FindPromoResponse>(), "No Have Promo for This Cart", true);
-            }
+                return (dataResponse, resultCallEngine.status, "No have promo for this cart");
 
             #endregion
 
@@ -298,7 +282,7 @@ namespace apps.Services
 
             #endregion
 
-            return (new List<FindPromoResponse>(), "SUCCESS", true);
+            return (dataResponse, true, "Success");
         }
     }
 }

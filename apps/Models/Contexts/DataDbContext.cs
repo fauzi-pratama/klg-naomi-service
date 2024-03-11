@@ -24,6 +24,8 @@ namespace apps.Models.Contexts
         public DbSet<EngineRuleVariable>? EngineRuleVariable { get; set; }
 
         //Db Engine Transaction
-        public DbSet<TransOtp> TransOtp { get; set; }
+        public DbSet<PromoTrans> PromoTrans { get; set; }
+        public DbSet<PromoTransDetail> PromoTransDetail { get; set; }
+        public DbSet<PromoOtp> TransOtp { get; set; }
     }
 }

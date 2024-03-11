@@ -37,6 +37,8 @@ builder.Services.AddDbContext<DataDbContext>(options => {
 builder.Services.AddScoped<EngineSetupWorkflow>();
 builder.Services.AddSingleton<IEngineService, EngineService>();
 builder.Services.AddScoped<IFindService, FindService>();
+builder.Services.AddScoped<IOtpService, OtpService>();
+builder.Services.AddScoped<ITransService, TransService>();
 
 //Setup Background Service
 builder.Services.AddHostedService<EngineSetupWorkflowHelper>();

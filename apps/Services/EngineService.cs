@@ -10,7 +10,7 @@ namespace apps.Services
 {
     public interface IEngineService
     {
-        bool SetupEngine(Workflow[] dataWorkflow);
+        (bool status, string message) SetupEngine(Workflow[] dataWorkflow);
         Task<(List<EngineResponse> data, bool status, string message)> GetPromo(EngineRequest engineRequest, bool getDetail = false);
     }
 
@@ -18,20 +18,28 @@ namespace apps.Services
     {
         private RulesEngine.RulesEngine? _rulesEngine;
 
-        public bool SetupEngine(Workflow[] dataWorkflow)
+        public (bool status, string message) SetupEngine(Workflow[] dataWorkflow)
         {
-            var reSettings = new ReSettings
+            try
             {
-                CustomActions =
-                    new Dictionary<string, Func<ActionBase>>
-                    {
+                //Setup Function Calculate Promo on Engine
+                var reSettings = new ReSettings
+                {
+                    CustomActions =
+                        new Dictionary<string, Func<ActionBase>>
+                        {
                         {"ResultPromo", () => new EngineResult()}
-                    }
-            };
+                        }
+                };
 
-            _rulesEngine = new RulesEngine.RulesEngine(dataWorkflow, reSettings);
+                //Setup Variable GLobal Engine
+                _rulesEngine = new RulesEngine.RulesEngine(dataWorkflow, reSettings);
 
-            return true;
+                return (true, "Success");
+            } catch (Exception ex)
+            {
+                return (false, $"Failed setup engine : {ex.Message}");
+            }
         }
 
         public async Task<(List<EngineResponse> data, bool status, string message)> GetPromo(EngineRequest engineRequest, bool getDetail = false)
@@ -40,14 +48,18 @@ namespace apps.Services
 
             try
             {
-                RuleParameter paramsPromo = new("paramsPromo", engineRequest);
+                //Setup Parameter Request to Parameter Engine
+                RuleParameter paramsPromo = new("paramsPromo", engineRequest); 
 
+                //Running Engine Search Promo
                 List<RuleResultTree> resultList =
                     await _rulesEngine!.ExecuteAllRulesAsync(engineRequest.CompanyCode, paramsPromo);
 
+                //Filter Result Engine With All Result or Just Success Result
                 if (!getDetail)
                     resultList = resultList.Where(q => q.IsSuccess).ToList();
 
+                //Convert Result Engine to Model EngineResponse
                 Parallel.ForEach(resultList, loopPromoResult =>
                 {
                     var dataResultDetailString = JsonConvert.SerializeObject(loopPromoResult.ActionResult.Output);

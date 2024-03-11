@@ -5,8 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace apps.Models.Entities
 {
-    [Table("trans_otp")]
-    public class TransOtp : BaseEntities
+    [Table("promo_otp")]
+    public class PromoOtp : BaseEntities
     {
         [Key]
         [Column("id", Order = 0)]
