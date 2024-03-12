@@ -2,10 +2,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using apps.Configs;
+using Microsoft.EntityFrameworkCore;
 
 namespace apps.Models.Entities
 {
     [Table("engine_workflow")]
+    [Index(nameof(Code))]
     public class EngineWorkflow : BaseEntities
     {
         [Key]

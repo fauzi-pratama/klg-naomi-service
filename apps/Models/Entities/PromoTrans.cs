@@ -1,11 +1,13 @@
 ﻿
 using apps.Configs;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace apps.Models.Entities
 {
     [Table("promo_trans")]
+    [Index(nameof(Id))]
     public class PromoTrans : BaseEntities
     {
         [Key]

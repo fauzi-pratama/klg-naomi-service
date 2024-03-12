@@ -2,21 +2,19 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using apps.Configs;
+using Microsoft.EntityFrameworkCore;
 
 namespace apps.Models.Entities
 {
     [Table("engine_rule_expression")]
+    [Index(nameof(EngineRuleCode), nameof(Code))]
     public class EngineRuleExpression : BaseEntities
     {
-        [Key]
-        [Column("Id", Order = 0)]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-
         [ForeignKey("engine_rule")]
         [Column("engine_rule_code", Order = 1), MaxLength(50)]
         public string? EngineRuleCode { get; set; }
 
+        [Key]
         [Required]
         [Column("code", Order = 2)]
         public string? Code { get; set; }

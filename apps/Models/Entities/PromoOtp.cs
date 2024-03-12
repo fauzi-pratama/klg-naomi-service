@@ -1,11 +1,13 @@
 ﻿
 using apps.Configs;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace apps.Models.Entities
 {
     [Table("promo_otp")]
+    [Index(nameof(Id))]
     public class PromoOtp : BaseEntities
     {
         [Key]

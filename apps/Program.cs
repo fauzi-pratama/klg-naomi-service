@@ -1,12 +1,13 @@
 
-using apps.Configs;
 using apps.Helper;
-using apps.Models.Contexts;
+using apps.Configs;
 using apps.Services;
+using apps.Models.Contexts;
+using System.Reflection;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 using VaultSharp.Extensions.Configuration;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,21 @@ if(appConfig.PostgreSqlConnectionString is null)
 
 builder.Services.AddDbContext<DataDbContext>(options => {
     options.UseNpgsql(appConfig.PostgreSqlConnectionString!);
+});
+
+//Config Redis
+if(appConfig.RedisConnectionString is null)
+    throw new ArgumentNullException("RedisConnectionString");
+
+builder.Services.AddSingleton<IDatabase>(provider =>
+{
+    var redisConfig = ConfigurationOptions.Parse(appConfig!.RedisConnectionString!);
+    redisConfig.AbortOnConnectFail = false;
+    redisConfig.ConnectRetry = 3;
+    redisConfig.ConnectTimeout = 5000;
+    var redisConn = ConnectionMultiplexer.Connect(redisConfig);
+
+    return redisConn.GetDatabase();
 });
 
 //Setup DI Service
