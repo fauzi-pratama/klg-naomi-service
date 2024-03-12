@@ -40,6 +40,9 @@ builder.Services.AddScoped<IFindService, FindService>();
 builder.Services.AddScoped<IOtpService, OtpService>();
 builder.Services.AddScoped<ITransService, TransService>();
 
+//Config Automapper
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
 //Setup Background Service
 builder.Services.AddHostedService<EngineSetupWorkflowHelper>();
 
