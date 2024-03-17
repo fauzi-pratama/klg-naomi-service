@@ -13,33 +13,33 @@ namespace apps.Configs
             List<Workflow> listWorkflow = [];
 
             List<EngineWorkflow>? listEngineWorkflow =
-                await dbContext.EngineWorkflow
+                await dbContext.EngineWorkflows
                 .Where(q => q.ActiveFlag)
-                .Include(q => q.Expression)
-                .Include(q => q.Rule.Where(q => q.ActiveFlag && q.EndDate >= DateTime.UtcNow))
+                .Include(q => q.Expressions)
+                .Include(q => q.Rules.Where(q => q.ActiveFlag && q.EndDate >= DateTime.UtcNow))
                     .ThenInclude(q => q.Mops)
-                .Include(q => q.Rule.Where(q => q.ActiveFlag && q.EndDate >= DateTime.UtcNow))
+                .Include(q => q.Rules.Where(q => q.ActiveFlag && q.EndDate >= DateTime.UtcNow))
                     .ThenInclude(q => q.Variables)
-                .Include(q => q.Rule.Where(q => q.ActiveFlag && q.EndDate >= DateTime.UtcNow))
+                .Include(q => q.Rules.Where(q => q.ActiveFlag && q.EndDate >= DateTime.UtcNow))
                     .ThenInclude(q => q.Expressions)
-                .Include(q => q.Rule.Where(q => q.ActiveFlag && q.EndDate >= DateTime.UtcNow))
+                .Include(q => q.Rules.Where(q => q.ActiveFlag && q.EndDate >= DateTime.UtcNow))
                     .ThenInclude(q => q.Results)
                 .ToListAsync();
 
             if (listEngineWorkflow is null || !listEngineWorkflow.Any())
                 return [.. listWorkflow];
 
-            Parallel.ForEach(listEngineWorkflow.Where(q => q.Expression is null || q.Expression.Count < 1), loopEngineWorkflow =>
+            Parallel.ForEach(listEngineWorkflow.Where(q => q.Expressions is null || q.Expressions.Count < 1), loopEngineWorkflow =>
             {
                 logger.LogError($"Company {loopEngineWorkflow.Code} has no expression !!");
             });
 
-            Parallel.ForEach(listEngineWorkflow.Where(q => q.Expression is not null && q.Expression.Count > 0), loopEngineWorkflow =>
+            Parallel.ForEach(listEngineWorkflow.Where(q => q.Expressions is not null && q.Expressions.Count > 0), loopEngineWorkflow =>
             {
                 //Setup Global params
                 var listGlobalParams = new List<ScopedParam>();
 
-                Parallel.ForEach(loopEngineWorkflow.Expression, loopExpression =>
+                Parallel.ForEach(loopEngineWorkflow.Expressions, loopExpression =>
                 {
                     listGlobalParams.Add(new ScopedParam()
                     {
@@ -51,15 +51,15 @@ namespace apps.Configs
                 //Setup Rule
                 var listRule = new List<Rule>();
 
-                if (loopEngineWorkflow.Rule is not null && loopEngineWorkflow.Rule.Any())
+                if (loopEngineWorkflow.Rules is not null && loopEngineWorkflow.Rules.Any())
                 {
-                    Parallel.ForEach(loopEngineWorkflow.Rule.Where(q => q.Variables is null || q.Variables.Count < 1 ||
+                    Parallel.ForEach(loopEngineWorkflow.Rules.Where(q => q.Variables is null || q.Variables.Count < 1 ||
                     q.Expressions is null || q.Expressions.Count < 1), loopEngineRules =>
                     {
                         logger.LogError($"Company {loopEngineWorkflow.Code} And Promo Code {loopEngineRules.Code} has no variables or expressions !!");
                     });
 
-                    Parallel.ForEach(loopEngineWorkflow.Rule.Where(q => q.Variables is not null && q.Variables.Count > 0 &&
+                    Parallel.ForEach(loopEngineWorkflow.Rules.Where(q => q.Variables is not null && q.Variables.Count > 0 &&
                         q.Expressions is not null && q.Expressions.Count > 0), loopEngineRules =>
                         {
                             //Setup Local Params

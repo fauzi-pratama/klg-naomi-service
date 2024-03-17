@@ -7,16 +7,16 @@ namespace apps.Services
 {
     public interface IOtpService
     {
-        Task<bool> ConfirmOtp(EngineRequest engineRequest);
+        //Task<bool> ConfirmOtp(EngineRequest engineRequest);
     }
 
     public class OtpService(DataDbContext dbContext) : IOtpService
     {
-        public async Task<bool> ConfirmOtp(EngineRequest engineRequest)
-        {
-            return await dbContext.TransOtp.AnyAsync(q => q.CompanyCode!.ToUpper() == engineRequest.CompanyCode!.ToUpper() &&
-                    q.Nip!.ToUpper() == engineRequest.EntertainNip!.ToUpper() && q.UseStatus && q.ExpDate > DateTime.UtcNow);
-        }
+        //public async Task<bool> ConfirmOtp(EngineRequest engineRequest)
+        //{
+        //    return await dbContext.TransOtp.AnyAsync(q => q.CompanyCode!.ToUpper() == engineRequest.CompanyCode!.ToUpper() &&
+        //            q.Nip!.ToUpper() == engineRequest.EntertainNip!.ToUpper() && q.UseStatus && q.ExpDate > DateTime.UtcNow);
+        //}
 
         //public async Task<(bool, string)> GetRequestPromoOtp(PromoOtpRequest promoOtpRequest)
         //{

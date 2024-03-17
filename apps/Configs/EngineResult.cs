@@ -338,7 +338,7 @@ namespace apps.Configs
                 PromoDesc = dataPromo.Description,
                 PromoTermCondition = dataPromo.TermsCondition,
                 PromoImageLink = dataPromo.ImageLink,
-                AbsoluteCombine = dataPromo.AbsoluteStatus,
+                AbsoluteCombine = dataPromo.AbsoluteFlag,
                 PromoListItem = responseDetail.OrderByDescending(q => q.TotalDiscount).ToList()
             };
 

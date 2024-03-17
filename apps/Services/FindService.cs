@@ -21,12 +21,12 @@ namespace apps.Services
             EngineRequest engineRequest = mapper.Map<EngineRequest>(dataRequest);
 
             //Check Company Code
-            if(dataDbContext.EngineWorkflow.Any(q => q.Code == engineRequest.CompanyCode && q.ActiveFlag))
+            if(dataDbContext.EngineWorkflows.Any(q => q.Code == engineRequest.CompanyCode && q.ActiveFlag))
                 return (dataResponse, false, $"Company Code {engineRequest.CompanyCode} is not registered !!");
 
             //Cek Validasi Otp Entertain
-            if (!string.IsNullOrWhiteSpace(engineRequest.EntertainNip) && await otpService.ConfirmOtp(engineRequest))
-                return (dataResponse, false, "Otp is not valid !!");
+            //if (!string.IsNullOrWhiteSpace(engineRequest.EntertainNip) && await otpService.ConfirmOtp(engineRequest))
+            //    return (dataResponse, false, "Otp is not valid !!");
 
             //Cek Transaction Already Exist
             var resultCekTransactionExist = await transService.CekTransactionExist(engineRequest);

@@ -6,6 +6,10 @@ namespace apps.Configs
 {
     public class BaseEntities
     {
+        [Key]
+        [Column("id", Order = 0)]
+        public Guid Id { get; set; } = Guid.NewGuid();
+
         [Required]
         [Column("created_date")]
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;

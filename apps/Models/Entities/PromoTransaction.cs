@@ -6,14 +6,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace apps.Models.Entities
 {
-    [Table("promo_trans")]
+    [Table("promo_transaction")]
     [Index(nameof(Id))]
-    public class PromoTrans : BaseEntities
+    public class PromoTransaction : BaseEntities
     {
-        [Key]
-        [Column("id", Order = 0)]
-        public Guid Id { get; set; }
-
         [Column("trans_id", Order = 1)]
         public string? TransId { get; set; }
 
@@ -32,6 +28,6 @@ namespace apps.Models.Entities
         [Column("exp_date", Order = 6)]
         public DateTime ExpDate { get; set; }
 
-        public List<PromoTransDetail>? Detail { get; set; }
+        public List<PromoTransactionDetail>? Detail { get; set; }
     }
 }

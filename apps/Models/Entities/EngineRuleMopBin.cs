@@ -6,20 +6,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace apps.Models.Entities
 {
-    [Table("engine_rule_site")]
+    [Table("engine_rule_mop_bin")]
     [Index(nameof(Id))]
-    public class EngineRuleSite : BaseEntities
+    public class EngineRuleMopBin : BaseEntities
     {
-        [ForeignKey("engine_rule")]
-        [Column("engine_rule_id", Order = 1), MaxLength(50)]
-        public string? EngineRuleId { get; set; }
+        [ForeignKey("engine_rule_mop")]
+        [Column("engine_rule_mop_id", Order = 1), MaxLength(50)]
+        public string? EngineRuleMopId { get; set; }
 
         [Required]
         [Column("code", Order = 2), MaxLength(50)]
         public string? Code { get; set; }
-
-        [Required]
-        [Column("name", Order = 3), MaxLength(200)]
-        public string? Name { get; set; }
     }
 }

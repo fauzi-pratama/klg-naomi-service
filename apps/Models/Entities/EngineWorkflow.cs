@@ -1,25 +1,24 @@
 ﻿
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using apps.Configs;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace apps.Models.Entities
 {
     [Table("engine_workflow")]
-    [Index(nameof(Code))]
+    [Index(nameof(Id))]
     public class EngineWorkflow : BaseEntities
     {
-        [Key]
-        [Column("code", Order = 0), MaxLength(50)]
+        [Column("code", Order = 1), MaxLength(50)]
         public string? Code { get; set; }
 
         [Required]
-        [Column("name", Order = 1), MaxLength(200)]
+        [Column("name", Order = 2), MaxLength(200)]
         public string? Name { get; set; }
 
-        public List<EngineWorkflowExpression>? Expression { get; set; }
+        public List<EngineWorkflowExpression>? Expressions { get; set; }
 
-        public List<EngineRule>? Rule { get; set; }
+        public List<EngineRule>? Rules { get; set; }
     }
 }

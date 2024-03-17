@@ -1,25 +1,25 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿
 using apps.Configs;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace apps.Models.Entities
 {
     [Table("engine_rule_membership")]
-    [Index(nameof(EngineRuleCode), nameof(Code))]
+    [Index(nameof(Id))]
     public class EngineRuleMembership : BaseEntities
     {
         [ForeignKey("engine_rule")]
-        [Column("engine_rule_code", Order = 0), MaxLength(50)]
-        public string? EngineRuleCode { get; set; }
+        [Column("engine_rule_id", Order = 1), MaxLength(50)]
+        public string? EngineRuleId { get; set; }
 
-        [Key]
         [Required]
-        [Column("code", Order = 1), MaxLength(50)]
+        [Column("code", Order = 2), MaxLength(50)]
         public string? Code { get; set; }
 
         [Required]
-        [Column("name", Order = 2), MaxLength(200)]
+        [Column("name", Order = 3), MaxLength(200)]
         public string? Name { get; set; }
     }
 }

@@ -17,7 +17,7 @@ namespace apps.Services
         {
             //Get Data Transaction Header & Transaction Detail
             var dataTrans = 
-                await dbContext.PromoTrans
+                await dbContext.PromoTransactions
                 .Where(q => q.CompanyCode == engineRequest.CompanyCode && q.TransId == engineRequest.TransId && q.ActiveFlag)
                 .Include(q => q.Detail)
                 .FirstOrDefaultAsync();
@@ -34,7 +34,7 @@ namespace apps.Services
             Parallel.ForEach(dataTrans.Detail, loopDetailCode =>
             {
                 var dataEngineRule = 
-                     dbContext.EngineRule
+                     dbContext.EngineRules
                     .Where(q => q.Code == loopDetailCode.PromoCode && (q.MaxUse > 0 || q.MaxBalance > 0) && q.ActiveFlag)
                     .FirstOrDefault();
 
@@ -44,8 +44,8 @@ namespace apps.Services
                 }
             });
 
-            dbContext.PromoTransDetail.RemoveRange(dataTrans.Detail);
-            dbContext.PromoTrans.Remove(dataTrans);
+            dbContext.PromoTransactionDetails.RemoveRange(dataTrans.Detail);
+            dbContext.PromoTransactions.Remove(dataTrans);
 
             await dbContext.SaveChangesAsync();
 

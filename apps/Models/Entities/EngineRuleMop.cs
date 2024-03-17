@@ -1,35 +1,35 @@
 ﻿
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using apps.Configs;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace apps.Models.Entities
 {
     [Table("engine_rule_mop")]
-    [Index(nameof(EngineRuleCode), nameof(SelectionCode), nameof(GroupCode))]
+    [Index(nameof(Id))]
     public class EngineRuleMop : BaseEntities
     {
         [ForeignKey("engine_rule")]
-        [Column("engine_rule_code", Order = 0), MaxLength(50)]
-        public string? EngineRuleCode { get; set; }
+        [Column("engine_rule_id", Order = 1), MaxLength(50)]
+        public string? EngineRuleId { get; set; }
 
-        [Key]
         [Required]
-        [Column("selection_code", Order = 1), MaxLength(50)]
+        [Column("selection_code", Order = 2), MaxLength(50)]
         public string? SelectionCode { get; set; }
 
         [Required]
-        [Column("selection_name", Order = 2), MaxLength(200)]
+        [Column("selection_name", Order = 3), MaxLength(200)]
         public string? SelectionName { get; set; }
 
-        [Key]
         [Required]
-        [Column("group_code", Order = 3), MaxLength(50)]
+        [Column("group_code", Order = 4), MaxLength(50)]
         public string? GroupCode { get; set; }
 
         [Required]
-        [Column("group_name", Order = 4), MaxLength(200)]
+        [Column("group_name", Order = 5), MaxLength(200)]
         public string? GroupName { get; set; }
+
+        public List<EngineRuleMopBin>? Bins { get; set; }
     }
 }
