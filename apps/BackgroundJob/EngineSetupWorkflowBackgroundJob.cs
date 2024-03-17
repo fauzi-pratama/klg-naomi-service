@@ -2,9 +2,9 @@
 using apps.Configs;
 using apps.Services;
 
-namespace apps.Helper
+namespace apps.BackgroundJob
 {
-    public class EngineSetupWorkflowHelper(IServiceScopeFactory factory) : BackgroundService
+    public class EngineSetupWorkflowBackgroundJob(IServiceScopeFactory factory) : BackgroundService
     {
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {

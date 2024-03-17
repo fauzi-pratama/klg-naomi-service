@@ -1,8 +1,8 @@
 
-using apps.Helper;
 using apps.Configs;
 using apps.Services;
 using System.Reflection;
+using apps.BackgroundJob;
 using StackExchange.Redis;
 using apps.Models.Contexts;
 using FluentValidation.AspNetCore;
@@ -50,7 +50,7 @@ builder.Services.AddScoped<ITransService, TransService>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 //Setup Background Service
-builder.Services.AddHostedService<EngineSetupWorkflowHelper>();
+builder.Services.AddHostedService<EngineSetupWorkflowBackgroundJob>();
 
 //Config Controller
 builder.Services.AddControllers(option =>
