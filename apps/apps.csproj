@@ -31,8 +31,4 @@
     <PackageReference Include="VaultSharp.Extensions.Configuration" Version="1.0.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Helper\" />
-  </ItemGroup>
-
 </Project>

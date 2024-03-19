@@ -1,5 +1,5 @@
 ﻿
-using apps.Models.Entities;
+using apps.Engine.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace apps.Models.Contexts
