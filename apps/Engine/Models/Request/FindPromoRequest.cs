@@ -16,7 +16,7 @@ namespace apps.Engine.Models.Request
         public bool NewMember { get; set; } = false;
         public string? MemberCode { get; set; }
         public string? StatusMember { get; set; }
-        public bool PromoVoucher { get; set; }
+        public bool PromoVoucher { get; set; } = false;
         public string? PromoVoucherCode { get; set; }
         public List<ItemProduct>? ItemProduct { get; set; }
     }

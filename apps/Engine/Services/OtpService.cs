@@ -6,7 +6,7 @@ namespace apps.Engine.Services
     {
     }
 
-    public class OtpService(DataDbContext dbContext) : IOtpService
+    public class OtpService() : IOtpService
     {
         
     }

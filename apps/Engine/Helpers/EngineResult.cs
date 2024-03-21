@@ -28,12 +28,12 @@ namespace apps.Engine.Helpers
         public static async Task<EngineResultDto> CalculatePromoSingle(EngineRule dataPromo, EngineParamsDto dataCart)
         {
             int linePromoCount = 1;
-            List<PromoListItem> responseDetail = new(); //Variable untuk save data detail item semua group
+            List<PromoListItem> responseDetail = []; //Variable untuk save data detail item semua group
 
             //Execute Promo Untuk Semua Item
             if (dataPromo.ItemType == "ALL")
             {
-                List<PromoListItemDetail> responseDetailGroup = new();
+                List<PromoListItemDetail> responseDetailGroup = [];
 
                 // Looping Item di Cart untuk Execute Promo
                 foreach (var loopItemCart in dataCart.ItemProduct!)
@@ -72,7 +72,7 @@ namespace apps.Engine.Helpers
                         discountTypeAll = Convert.ToDecimal(loopItemCart.Qty) * loopItemCart.Price * Convert.ToDecimal(dataPromo.ActionValue!.Replace("%", "")) / 100;
                     }
 
-                    PromoListItemDetail ResponseDetailGroupSingle = new()
+                    PromoListItemDetail ResponseDetailGroupSingle = new(null)
                     {
                         LineNo = loopItemCart.LineNo,
                         SkuCode = loopItemCart.SkuCode,
@@ -96,13 +96,13 @@ namespace apps.Engine.Helpers
                 decimal? total_discountAllItem = responseDetailGroup.Sum(q => q.TotalDiscount) + Convert.ToDecimal(roundingAllItem);
                 decimal? total_afterAllItem = total_beforeAllItem - total_discountAllItem;
 
-                PromoListItem responseDetailSingle = new()
+                PromoListItem responseDetailSingle = new(null)
                 {
                     LinePromo = linePromoCount,
                     Rounding = roundingAllItem,
-                    TotalBefore = total_beforeAllItem,
-                    TotalDiscount = total_discountAllItem,
-                    TotalAfter = total_afterAllItem,
+                    TotalBefore = (decimal)total_beforeAllItem,
+                    TotalDiscount = (decimal)total_discountAllItem,
+                    TotalAfter = (decimal)total_afterAllItem,
                     PromoListItemDetail = responseDetailGroup
                 };
 
@@ -112,7 +112,7 @@ namespace apps.Engine.Helpers
             else if (dataPromo.ItemType == "CUSTOM")
             {
                 //Grouping item bedasarkan group di db ms_promo_rule_result
-                List<List<ItemGroupResultPerPromo>> listItemPerPromo = new(); //Variable untuk menampung item custom group
+                List<List<ItemGroupResultPerPromo>> listItemPerPromo = []; //Variable untuk menampung item custom group
                 var groupList = dataPromo.Results!.Select(q => q.GroupLine).Distinct().ToList(); //get data disctinc group
 
                 //Get Data Qty Total Bundle
@@ -120,7 +120,7 @@ namespace apps.Engine.Helpers
                 decimal totalPriceItemBudle = 0;
                 if (dataPromo.ActionType == "BUNDLE")
                 {
-                    List<string> itemGetDiscountBundle = new();
+                    List<string> itemGetDiscountBundle = [];
 
                     foreach (var loopItem in dataPromo.Results!)
                     {
@@ -135,13 +135,13 @@ namespace apps.Engine.Helpers
                 //Looping group untuk mendapatkan item
                 foreach (var loopGroup in groupList)
                 {
-                    List<ItemGroupResultPerPromo> listItemPerGroup = new(); //Varibel untuk menampung item di 1 group
+                    List<ItemGroupResultPerPromo> listItemPerGroup = []; //Varibel untuk menampung item di 1 group
                     var listItemGroup = dataPromo.Results!.Where(q => q.GroupLine == loopGroup).ToList(); //get data item sesuai looping group
 
                     foreach (var loopItemGroup in listItemGroup)
                     {
                         //Input data item ke list dalam 1 group
-                        ItemGroupResultPerPromo ItemPerPromo = new()
+                        ItemGroupResultPerPromo ItemPerPromo = new(null)
                         {
                             SkuCode = loopItemGroup.Item,
                             Value = loopItemGroup.Value,
@@ -158,10 +158,10 @@ namespace apps.Engine.Helpers
                 foreach (var loopItemperPromo in listItemPerPromo)
                 {
 
-                    List<PromoListItemDetail> responseDetailGroup = new(); //Model for save hasil promo item per group
+                    List<PromoListItemDetail> responseDetailGroup = []; //Model for save hasil promo item per group
 
                     decimal discountTypeCustom = 0;
-                    List<string> dataListItem = new();
+                    List<string> dataListItem = [];
 
                     foreach (var loopGetDataItemPerPromo in loopItemperPromo)
                     {
@@ -169,7 +169,7 @@ namespace apps.Engine.Helpers
                     }
 
                     /* Start Untuk Cek Item AND Jika tidak ada salah satu maka tidak dapat promo */
-                    List<string> dataItemGroup = new();
+                    List<string> dataItemGroup = [];
 
                     foreach (var loopItemGroupString in loopItemperPromo)
                     {
@@ -186,7 +186,7 @@ namespace apps.Engine.Helpers
                     {
                         foreach (var loopItemPerGroup in loopItemperPromo)
                         {
-                            PromoListItemDetail responseDetailGroupSingle = new();
+                            PromoListItemDetail responseDetailGroupSingle = new(null);
                             var dataItemCart = dataCart.ItemProduct!.Find(q => q.SkuCode == loopItemPerGroup.SkuCode); //Get data di cart
 
                             if (dataItemCart != null)
@@ -299,14 +299,14 @@ namespace apps.Engine.Helpers
                         decimal? total_discountAllItem = responseDetailGroup.Sum(q => q.TotalDiscount) + Convert.ToDecimal(roundingAllItem);
                         decimal? total_afterAllItem = total_beforeAllItem - total_discountAllItem;
 
-                        PromoListItem responseDetailSingle = new()
+                        PromoListItem responseDetailSingle = new(null)
                         {
                             LinePromo = linePromoCount,
                             Rounding = roundingAllItem,
-                            TotalBefore = total_beforeAllItem,
-                            TotalDiscount = total_discountAllItem,
-                            TotalAfter = total_afterAllItem,
-                            PromoListItemDetail = responseDetailGroup.OrderBy(q => q.LineNo).ToList()
+                            TotalBefore = (decimal)total_beforeAllItem,
+                            TotalDiscount = (decimal)total_discountAllItem,
+                            TotalAfter = (decimal)total_afterAllItem,
+                            PromoListItemDetail = [.. responseDetailGroup.OrderBy(q => q.LineNo)]
                         };
 
                         responseDetail.Add(responseDetailSingle);
@@ -317,7 +317,7 @@ namespace apps.Engine.Helpers
             }
 
             //Varibale Save data to Response
-            EngineResultDto response = new()
+            EngineResultDto response = new(null)
             {
                 TransId = dataCart.TransId,
                 CompanyCode = dataCart.CompanyCode,
@@ -338,17 +338,17 @@ namespace apps.Engine.Helpers
                 PromoTermCondition = dataPromo.TermsCondition,
                 PromoImageLink = dataPromo.ImageLink,
                 AbsoluteCombine = dataPromo.AbsoluteFlag,
-                PromoListItem = responseDetail.OrderByDescending(q => q.TotalDiscount).ToList()
+                PromoListItem = [.. responseDetail.OrderByDescending(q => q.TotalDiscount)]
             };
 
             //Save Data Require MOP
             if (dataPromo.Cls == 3 && dataPromo.Mops != null && dataPromo.Mops.Count > 0)
             {
-                List<PromoMopRequireDetail> listPromoMopRequireDetail = new();
+                List<PromoMopRequireDetail> listPromoMopRequireDetail = [];
 
                 foreach (var loopReqMop in dataPromo.Mops!)
                 {
-                    PromoMopRequireDetail promoMopRequireDetail = new()
+                    PromoMopRequireDetail promoMopRequireDetail = new(null)
                     {
                         MopGroupCode = loopReqMop.GroupCode,
                         MopGroupName = loopReqMop.GroupName
@@ -357,7 +357,7 @@ namespace apps.Engine.Helpers
                     listPromoMopRequireDetail.Add(promoMopRequireDetail);
                 }
 
-                PromoMopRequire? promoMopRequire = new()
+                PromoMopRequire? promoMopRequire = new(null)
                 {
                     MopPromoSelectionCode = dataPromo.Mops!.FirstOrDefault()!.SelectionCode,
                     MopPromoSelectionName = dataPromo.Mops!.FirstOrDefault()!.SelectionName,
@@ -418,7 +418,7 @@ namespace apps.Engine.Helpers
                                 decimal? totalDiscountCovert = totalPriceSku / totalPriceCart * Convert.ToDecimal(response.ValMaxDiscount);
 
                                 loopDetailPromoItem.TotalDiscount = Math.Floor(totalDiscountCovert ?? 0);
-                                loopDetailPromoItem.TotalAfter = totalPriceSku - Math.Floor(totalDiscountCovert ?? 0);
+                                loopDetailPromoItem.TotalAfter = (decimal)totalPriceSku - Math.Floor(totalDiscountCovert ?? 0);
                             }
 
                             //ReCalculate Convert Amount

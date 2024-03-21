@@ -14,16 +14,16 @@ namespace apps.Engine.Models.Response
         public string? ValDiscount { get; set; }
         public string? ValMaxDiscount { get; set; }
         public bool ValMaxDiscountStatus { get; set; } = false;
-        public int? PromoCls { get; set; }
-        public int? PromoLvl { get; set; }
-        public int? MaxMultiple { get; set; }
-        public int? MaxUse { get; set; }
-        public decimal? MaxBalance { get; set; }
-        public int? MultipleQty { get; set; }
+        public int PromoCls { get; set; } = 0;
+        public int PromoLvl { get; set; } = 0;
+        public int MaxMultiple { get; set; } = 0;
+        public int MaxUse { get; set; } = 0;
+        public decimal MaxBalance { get; set; } = 0;
+        public int MultipleQty { get; set; } = 0;
         public string? PromoDesc { get; set; }
         public string? PromoTermCondition { get; set; }
         public string? PromoImageLink { get; set; }
-        public bool AbsoluteCombine { get; set; }
+        public bool AbsoluteCombine { get; set; } = false;
         public PromoMopRequire? PromoMopRequire { get; set; }
         public List<PromoListItem>? PromoListItem { get; set; }
     }

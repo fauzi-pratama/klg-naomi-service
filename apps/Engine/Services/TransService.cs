@@ -27,7 +27,7 @@ namespace apps.Engine.Services
                 return (true, "Success");
 
             //Return False if Transaction already commited
-            if (dataTrans is { Commited: true })
+            if (dataTrans is { CommitedFlag: true })
                 return (false, $"Transaction Id : {engineRequest.TransId}, is already commited !!");
 
             //Rollback Transaction
@@ -37,11 +37,6 @@ namespace apps.Engine.Services
                      dbContext.EngineRules
                     .Where(q => q.Code == loopDetailCode.PromoCode && (q.MaxUse > 0 || q.MaxBalance > 0) && q.ActiveFlag)
                     .FirstOrDefault();
-
-                if (dataEngineRule is not null)
-                {
-
-                }
             });
 
             dbContext.PromoTransactionDetails.RemoveRange(dataTrans.Detail);

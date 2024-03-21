@@ -12,7 +12,7 @@ namespace apps.Engine.Services
         Task<(List<FindPromoResponse> data, bool status, string message)> FindPromo(FindPromoRequest dataRequest);
     }
 
-    public class FindService(DataDbContext dataDbContext, IEngineService engineService, IMapper mapper, IOtpService otpService,
+    public class FindService(DataDbContext dataDbContext, IEngineService engineService, IMapper mapper,
         ITransService transService) : IFindService
     {
         public async Task<(List<FindPromoResponse> data, bool status, string message)> FindPromo(FindPromoRequest dataRequest)
@@ -30,9 +30,10 @@ namespace apps.Engine.Services
             //    return (dataResponse, false, "Otp is not valid !!");
 
             //Cek Transaction Already Exist
-            var resultCekTransactionExist = await transService.CekTransactionExist(engineRequest);
-            if (!resultCekTransactionExist.status)
-                return (dataResponse, resultCekTransactionExist.status, resultCekTransactionExist.message);
+            var (statusTransaction, messageTransaction) = await transService.CekTransactionExist(engineRequest);
+
+            if (!statusTransaction)
+                return (dataResponse, statusTransaction, messageTransaction);
 
             #region Cek Transaction Already Exist
 
@@ -112,15 +113,15 @@ namespace apps.Engine.Services
 
             #region Call Engine Promo
 
-            var resultCallEngine = await engineService.GetPromo(engineRequest);
+            var (dataEngine, statusEngine, messageEngine) = await engineService.GetPromo(engineRequest);
 
             //Validate Error Call Engine
-            if (!resultCallEngine.status)
-                return (dataResponse, resultCallEngine.status, $"Failed get promo from engine, {resultCallEngine.message}");
+            if (!statusEngine)
+                return (dataResponse, statusEngine, $"Failed get promo from engine, {messageEngine}");
 
             //Validate Null on Result Engine
-            if (resultCallEngine.data is null)
-                return (dataResponse, resultCallEngine.status, "No have promo for this cart");
+            if (dataEngine is null)
+                return (dataResponse, statusEngine, "No have promo for this cart");
 
             #endregion
 

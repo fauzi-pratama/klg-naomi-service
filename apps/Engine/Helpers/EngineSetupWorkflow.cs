@@ -26,7 +26,7 @@ namespace apps.Engine.Helpers
                     .ThenInclude(q => q.Results)
                 .ToListAsync();
 
-            if (listEngineWorkflow is null || !listEngineWorkflow.Any())
+            if (listEngineWorkflow is null || listEngineWorkflow.Count == 0)
                 return [.. listWorkflow];
 
             Parallel.ForEach(listEngineWorkflow.Where(q => q.Expressions is null || q.Expressions.Count < 1), loopEngineWorkflow =>
@@ -51,7 +51,7 @@ namespace apps.Engine.Helpers
                 //Setup Rule
                 var listRule = new List<Rule>();
 
-                if (loopEngineWorkflow.Rules is not null && loopEngineWorkflow.Rules.Any())
+                if (loopEngineWorkflow.Rules is not null && loopEngineWorkflow.Rules.Count > 0)
                 {
                     Parallel.ForEach(loopEngineWorkflow.Rules.Where(q => q.Variables is null || q.Variables.Count < 1 ||
                     q.Expressions is null || q.Expressions.Count < 1), loopEngineRules =>
@@ -63,7 +63,7 @@ namespace apps.Engine.Helpers
                         q.Expressions is not null && q.Expressions.Count > 0), loopEngineRules =>
                         {
                             //Setup Local Params
-                            List<ScopedParam> listLocalParams = new();
+                            List<ScopedParam> listLocalParams = [];
                             Parallel.ForEach(loopEngineRules.Variables, loopEngineRulesVariable =>
                             {
                                 listLocalParams.Add(new ScopedParam()

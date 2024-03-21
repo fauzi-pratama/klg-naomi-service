@@ -1,58 +1,38 @@
 ﻿namespace apps.Engine.Models.Dto
 {
-    public class EngineParamsDto()
+    public class EngineParamsDto(EngineParamsDto? data)
     {
-        public string? TransId { get; set; }
-        public string? TransDate { get; set; }
-        public string? CompanyCode { get; set; }
-        public string? SiteCode { get; set; }
-        public string? ZoneCode { get; set; }
-        public string? EntertainNip { get; set; }
-        public string? EntertainOtp { get; set; }
-        public string? PromoAppCode { get; set; }
-        public bool Member { get; set; } = false;
-        public bool NewMember { get; set; } = false;
-        public string? MemberCode { get; set; }
-        public string? StatusMember { get; set; }
-        public bool PromoVoucher { get; set; }
-        public string? PromoVoucherCode { get; set; }
-        public List<ItemProduct>? ItemProduct { get; set; }
-        public List<Mop>? Mop { get; set; }
+        public string? TransId { get; set; } = data?.TransId;
+        public string? TransDate { get; set; } = data?.TransDate;
+        public string? CompanyCode { get; set; } = data?.CompanyCode;
+        public string? SiteCode { get; set; } = data?.SiteCode;
+        public string? ZoneCode { get; set; } = data?.ZoneCode;
+        public string? EntertainNip { get; set; } = data?.EntertainNip;
+        public string? EntertainOtp { get; set; } = data?.EntertainOtp;
+        public string? PromoAppCode { get; set; } = data?.PromoAppCode;
+        public bool Member { get; set; } = data?.Member ?? false;
+        public bool NewMember { get; set; } = data?.NewMember ?? false;
+        public string? MemberCode { get; set; } = data?.MemberCode;
+        public string? StatusMember { get; set; } = data?.StatusMember;
+        public bool PromoVoucher { get; set; } = data?.PromoVoucher ?? false;
+        public string? PromoVoucherCode { get; set; } = data?.PromoVoucherCode;
+        public List<ItemProduct>? ItemProduct { get; set; } = data?.ItemProduct;
+        public List<Mop>? Mop { get; set; } = data?.Mop;
     }
 
-    public class ItemProduct
+    public class ItemProduct(ItemProduct? data)
     {
-        public int LineNo { get; set; }
-        public string? SkuCode { get; set; }
-        public string? DeptCode { get; set; }
-        public double Qty { get; set; }
-        public decimal Price { get; set; }
-        public decimal PriceTemp { get; set; }
-
-        public ItemProduct() { }
-
-        public ItemProduct(ItemProduct other)
-        {
-            LineNo = other.LineNo;
-            SkuCode = other.SkuCode;
-            DeptCode = other.DeptCode;
-            Qty = other.Qty;
-            Price = other.Price;
-            PriceTemp = other.PriceTemp;
-        }
+        public int LineNo { get; set; } = data?.LineNo ?? 0;
+        public string? SkuCode { get; set; } = data?.SkuCode;
+        public string? DeptCode { get; set; } = data?.DeptCode;
+        public double Qty { get; set; } = data?.Qty ?? 0;
+        public decimal Price { get; set; } = data?.Price ?? 0;
+        public decimal PriceTemp { get; set; } = data?.PriceTemp ?? 0;
     }
 
-    public class Mop
+    public class Mop(Mop? data)
     {
-        public string? MopCode { get; set; }
-        public decimal Amount { get; set; }
-
-        public Mop() { }
-
-        public Mop(Mop other)
-        {
-            MopCode = other.MopCode;
-            Amount = other.Amount;
-        }
+        public string? MopCode { get; set; } = data?.MopCode;
+        public decimal Amount { get; set; } = data?.Amount ?? 0;
     }
 }
